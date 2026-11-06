@@ -37,19 +37,20 @@ The current public Supabase setup supports shared suggestion submissions and rea
 The site supports an admin account protected by TOTP multi-factor authentication. Google Authenticator, Microsoft Authenticator, 1Password and other compatible authenticator apps work.
 
 1. Create a Supabase project and run the **entire** `supabase/schema.sql` file in the SQL Editor.
-2. In Supabase, open **Authentication → Users** and create your admin user with an email and password. Keep those credentials private.
-3. Copy that user's UUID from the Users list.
-4. In the SQL Editor, grant that specific account admin access:
+2. To make the shared board and hero progress available to every visitor, add the project URL and public anon/publishable key to `PUBLIC_SUPABASE_CONFIG` near the top of the script in `index.html`. These values are intended to be public. Never use a service-role key.
+3. In Supabase, open **Authentication → Users** and create your admin user with an email and password. Keep those credentials private.
+4. Copy that user's UUID from the Users list.
+5. In the SQL Editor, grant that specific account admin access:
 
    ```sql
    insert into public.ltr_admins(user_id)
    values ('PASTE-YOUR-AUTH-USER-UUID-HERE');
    ```
 
-5. In the website's **Settings**, save the Supabase project URL and public anon/publishable key.
-6. Under **Admin login & authenticator**, sign in with the email and password you created.
-7. Select **Set up authenticator**, scan the QR code using Google Authenticator (or another TOTP app), then enter the six-digit code to verify.
-8. Once verified, use the hero cards' **Edit** controls to change statuses, levels, episode links and notes. Changes are stored in Supabase and shared with visitors.
+6. In the website's **Settings**, save the Supabase project URL and public anon/publishable key.
+7. Under **Admin login & authenticator**, sign in with the email and password you created.
+8. Select **Set up authenticator**, scan the QR code using Google Authenticator (or another TOTP app), then enter the six-digit code to verify.
+9. Once verified, use the hero cards' **Edit** controls to change statuses, levels, episode links and notes. Changes are stored in Supabase and shared with visitors.
 
 The database only permits accounts listed in `ltr_admins` to update shared hero progress, and requires the Supabase session to be at MFA assurance level `aal2`. The browser cannot grant itself admin status. Do not add public visitors to `ltr_admins`, and never put a service-role key in the website.
 
