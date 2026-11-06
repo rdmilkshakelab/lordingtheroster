@@ -10,7 +10,8 @@ A responsive GitHub Pages tracker for the Marvel Rivals challenge: reach **Lord*
 - Random next-hero picker.
 - JSON export/import backup.
 - Community suggestion form.
-- Optional Supabase connection for a shared suggestion board.
+- Shared Supabase progress and community suggestions.
+- MFA-protected site administration for hero progress, the active challenge, suggestions and votes.
 
 Progress is saved in the visitor's browser using localStorage. It is not automatically synchronised between devices.
 
@@ -30,7 +31,7 @@ Progress is saved in the visitor's browser using localStorage. It is not automat
 
 **Never paste a Supabase service-role key into the website.** The browser must only use the public anon/publishable key, protected by Row Level Security.
 
-The current public Supabase setup supports shared suggestion submissions and reading. Shared voting and moderation are not enabled yet. They need a secure vote endpoint and an authenticated admin flow; this is deliberately not faked with a client-side counter.
+Shared suggestions, voting and progress are stored in Supabase. The admin dashboard can change the site-wide active hero, edit or reset shared hero progress, moderate suggestion status, delete suggestions, inspect individual votes, delete individual votes, and reset all votes for a suggestion. These operations are enforced by database Row Level Security and require an allow-listed administrator with MFA assurance level `aal2`.
 
 ## Admin login with an authenticator app
 
@@ -50,11 +51,12 @@ The site supports an admin account protected by TOTP multi-factor authentication
 6. In the website's **Settings**, save the Supabase project URL and public anon/publishable key.
 7. Under **Admin login & authenticator**, sign in with the email and password you created.
 8. Select **Set up authenticator**, scan the QR code using Google Authenticator (or another TOTP app), then enter the six-digit code to verify.
-9. Once verified, use the hero cards' **Edit** controls to change statuses, levels, episode links and notes. Changes are stored in Supabase and shared with visitors.
+9. Once verified, use the hero cards' **Edit** controls and the **Site administration** section to manage the roster and community board. Admin changes are stored in Supabase and shared with visitors.
+10. The admin dashboard includes a **Remove 2FA** action. It asks for a current authenticator code before removing the factor. Admin access is locked until a new authenticator is enrolled and verified.
 
 The database only permits accounts listed in `ltr_admins` to update shared hero progress, and requires the Supabase session to be at MFA assurance level `aal2`. The browser cannot grant itself admin status. Do not add public visitors to `ltr_admins`, and never put a service-role key in the website.
 
-If you lose access to your authenticator, use Supabase's trusted account recovery process from the project dashboard. Do not delete the MFA factor casually, as it protects the admin account.
+If you are upgrading an existing project, run [supabase/admin-upgrade.sql](supabase/admin-upgrade.sql) in the Supabase SQL Editor. Fresh installations can run the complete [supabase/schema.sql](supabase/schema.sql) instead. Removing 2FA temporarily locks all admin actions until MFA is set up and verified again.
 
 ## Updating the roster
 
