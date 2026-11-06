@@ -5,7 +5,8 @@ A responsive GitHub Pages tracker for the Marvel Rivals challenge: reach **Lord*
 ## Features
 
 - Full 54-hero roster (as of November 2026), with role filters and search.
-- Track each hero's status, proficiency level, episode number, video URL and notes.
+- Track each hero's status, proficiency level, episode number, video URL, notes and shared progress images.
+- Admin image uploads (JPG, PNG, WEBP or GIF, up to 8 MB) stored in Supabase Storage and displayed to all visitors.
 - Dashboard with Lord count, completion percentage and current challenge.
 - Random next-hero picker.
 - JSON export/import backup.
@@ -56,7 +57,7 @@ The site supports an admin account protected by TOTP multi-factor authentication
 
 The database only permits accounts listed in `ltr_admins` to update shared hero progress, and requires the Supabase session to be at MFA assurance level `aal2`. The browser cannot grant itself admin status. Do not add public visitors to `ltr_admins`, and never put a service-role key in the website.
 
-If you are upgrading an existing project, run [supabase/admin-upgrade.sql](supabase/admin-upgrade.sql) in the Supabase SQL Editor. Fresh installations can run the complete [supabase/schema.sql](supabase/schema.sql) instead. Removing 2FA temporarily locks all admin actions until MFA is set up and verified again.
+If you are upgrading an existing project, run [supabase/admin-upgrade.sql](supabase/admin-upgrade.sql) and then [supabase/progress-images.sql](supabase/progress-images.sql) in the Supabase SQL Editor. Fresh installations can run the complete [supabase/schema.sql](supabase/schema.sql) instead. The progress-images migration creates the public image bucket and restricts uploads, replacements and deletions to verified administrators. Removing 2FA temporarily locks all admin actions until MFA is set up and verified again.
 
 ## Updating the roster
 
